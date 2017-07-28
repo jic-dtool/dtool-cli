@@ -5,7 +5,7 @@ version = "0.1.0"
 readme = open('README.rst').read()
 
 setup(name="dtool-cli",
-      packages=["dtool-cli"],
+      packages=["dtool_cli"],
       version=version,
       description="Data management command line interface: dtool.",
       long_description=readme,
