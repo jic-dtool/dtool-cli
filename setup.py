@@ -18,6 +18,9 @@ setup(
         "Click",
         "click-plugins",
     ],
+    entry_points={
+        'console_scripts': ['dtool=dtool_cli.cli:dtool'],
+    },
     download_url="{}/tarball/{}".format(url, version),
     license="MIT"
 )
