@@ -21,8 +21,22 @@ The ``dtool-cli`` plug-in system exposes two name spaces for registering command
 - ``dtool.dataset``
 - ``dtool.collection``
 
-To create a ``dtool-cli`` plug-in, create a Python package with entry points
-along the lines of the below in the ``setup.py``::
+To create a ``dtool-cli`` plug-in, create a Python package with a ``dataset``
+and/or a ``collection`` module(s). Below is the content of a hypothetical
+``dtool_create/dataset.py`` file, aka the ``dataset`` module in a
+``dtool-create`` plugin::
+
+    """dataset command line module."""
+
+    import click
+
+
+    @click.command()
+    def create():
+        print("Creating dataset...")
+
+
+Then create entry points along the lines of the below in the ``setup.py``::
 
     from setuptools import setup
 
@@ -30,13 +44,13 @@ along the lines of the below in the ``setup.py``::
         ...
         entry_points={
             "dtool.dataset": [
-                "create=dtool_create.cli:create_dataset",
-                "markup=dtool_create.cli:markup_dataset",
-                "manifest=dtool_create.cli:manifest",
+                "create=dtool_create.dataset:create",
+                "markup=dtool_create.dataset:markup",
+                "manifest=dtool_create.dataset:manifest",
             ],
             "dtool.collection": [
-                "create=dtool_create.cli:create_collection",
-                "markup=dtool_create.cli:markup_collection",
+                "create=dtool_create.collection:create",
+                "markup=dtool_create.collection:markup",
             ],
         },
         ...
