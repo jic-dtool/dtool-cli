@@ -8,7 +8,7 @@ setup(
     name="dtool-cli",
     packages=["dtool_cli"],
     version=version,
-    description="Data management command line interface: dtool.",
+    description="Data management command line tool: dtool.",
     long_description=readme,
     include_package_data=True,
     author="Tjelvar Olsson",

@@ -1,7 +1,7 @@
 README
 ======
 
-Data management command line interface: dtool.
+Data management command line tool: dtool.
 
 Overview
 --------
