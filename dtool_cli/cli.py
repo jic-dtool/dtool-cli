@@ -17,10 +17,13 @@ def _path_is_dataset(ctx, param, value):
         raise click.BadParameter(
             "Not a directory: {}".format(abspath))
     try:
-        dtoolcore.DataSet.from_path(abspath)
-    except (dtoolcore.DtoolTypeError, dtoolcore.NotDtoolObject) as e:
-        raise click.BadParameter(
-            "Not a dataset: {}".format(e))
+        dtoolcore.DataSet.from_uri(abspath)
+    except dtoolcore.DtoolCoreTypeError as e:
+        try:
+            dtoolcore.ProtoDataSet.from_uri(abspath)
+        except dtoolcore.DtoolCoreTypeError as e:
+            raise click.BadParameter(
+                "Not a dataset: {}".format(e))
     return abspath
 
 
