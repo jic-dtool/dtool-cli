@@ -11,26 +11,9 @@ import dtoolcore
 from . import __version__
 
 
-def _path_is_dataset(ctx, param, value):
-    abspath = os.path.abspath(value)
-    if not os.path.isdir(abspath):
-        raise click.BadParameter(
-            "Not a directory: {}".format(abspath))
-    if not dtoolcore._is_dataset(abspath, config_path=None):
-        raise click.BadParameter(
-            "Not a dataset: {}".format(abspath))
-    return abspath
-
-
-dataset_path_argument = click.argument(
-    'dataset_path',
-    callback=_path_is_dataset)
-
-
 def pretty_version_text():
     """Return pretty version text listing all plugins."""
-    modules = [ep.module_name for ep in iter_entry_points("dtool.dataset")]
-    modules = modules + [ep.module_name for ep in iter_entry_points("dtool.collection")]
+    modules = [ep.module_name for ep in iter_entry_points("dtool.cli")]
     packages = set([m.split(".")[0] for m in modules])
     version_lines = ["dtool, version {}".format(__version__)]
     version_lines.append("\nCore:")
@@ -41,23 +24,8 @@ def pretty_version_text():
         version_lines.append("{}, version {}".format(p,  dyn_load_p.__version__))
     return "\n".join(version_lines)
 
+@with_plugins(iter_entry_points("dtool.cli"))
 @click.group()
 @click.version_option(message=pretty_version_text())
 def dtool():
-    """Manage data as datasets and collections."""
-
-
-@with_plugins(iter_entry_points("dtool.dataset"))
-@dtool.group()
-def dataset():
-    """Commands to work on a dataset."""
-
-
-@with_plugins(iter_entry_points("dtool.collection"))
-@dtool.group()
-def collection():
-    """Commands to work on a collection."""
-
-
-if __name__ == "__main__":
-    dtool()
+    """Tool to work with datasets."""

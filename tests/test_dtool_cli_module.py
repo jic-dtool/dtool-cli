@@ -13,17 +13,3 @@ def test_dtool():
     runner = CliRunner()
     result = runner.invoke(dtool)
     assert result.exit_code == 0
-
-
-def test_dataset():
-    from dtool_cli.cli import dtool
-    runner = CliRunner()
-    result = runner.invoke(dtool, ['dataset'])
-    assert result.exit_code == 0
-
-
-def test_collection():
-    from dtool_cli.cli import dtool
-    runner = CliRunner()
-    result = runner.invoke(dtool, ['collection'])
-    assert result.exit_code == 0
