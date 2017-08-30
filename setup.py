@@ -17,7 +17,7 @@ setup(
     install_requires=[
         "click",
         "click-plugins",
-        "dtoolcore",
+        "dtoolcore>=2",
     ],
     entry_points={
         'console_scripts': ['dtool=dtool_cli.cli:dtool'],
