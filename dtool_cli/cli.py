@@ -1,6 +1,5 @@
 """Skeleton defining the dtool plugin entry points."""
 
-import os
 from pkg_resources import iter_entry_points
 
 import click
@@ -21,8 +20,10 @@ def pretty_version_text():
     version_lines.append("\nPlugins:")
     for p in packages:
         dyn_load_p = __import__(p)
-        version_lines.append("{}, version {}".format(p,  dyn_load_p.__version__))
+        version_lines.append(
+            "{}, version {}".format(p,  dyn_load_p.__version__))
     return "\n".join(version_lines)
+
 
 @with_plugins(iter_entry_points("dtool.cli"))
 @click.group()
