@@ -15,7 +15,7 @@ setup(
     author_email="tjelvar.olsson@jic.ac.uk",
     url=url,
     install_requires=[
-        "Click",
+        "click",
         "click-plugins",
         "dtoolcore",
     ],
