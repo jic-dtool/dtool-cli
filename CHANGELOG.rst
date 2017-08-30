@@ -31,3 +31,18 @@ Security
 ^^^^^^^^
 
 
+[0.2.0] 2017-08-30
+------------------
+
+Basic scaffold to create a ``dtool`` client that uses the ``dtoolcore`` version
+2 API.
+
+Added
+^^^^^
+
+- Entry point for ``dtool.cli``
+
+Removed
+^^^^^^^
+
+- Entry points ``dtool.dataset`` and ``dtool.collection``
