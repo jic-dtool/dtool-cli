@@ -1,5 +1,7 @@
 """Skeleton defining the dtool plugin entry points."""
 
+import logging
+
 from pkg_resources import iter_entry_points
 
 import click
@@ -44,5 +46,10 @@ def pretty_version_text():
 @with_plugins(iter_entry_points("dtool.cli"))
 @click.group()
 @click.version_option(message=pretty_version_text())
-def dtool():
+@click.option("--debug", is_flag=True, help="Turn on debugging output.")
+def dtool(debug):
     """Tool to work with datasets."""
+    level = logging.WARNING
+    if debug:
+        level = logging.DEBUG
+    logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s', level=level)
