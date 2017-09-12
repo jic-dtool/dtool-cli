@@ -1,5 +1,6 @@
 """Skeleton defining the dtool plugin entry points."""
 
+import os
 import logging
 
 from pkg_resources import iter_entry_points
@@ -10,6 +11,21 @@ from click_plugins import with_plugins
 import dtoolcore
 
 from . import __version__
+
+CONFIG_PATH = os.path.expanduser("~/.config/dtool/dtool.json")
+
+
+def dataset_uri_validation(ctx, param, value):
+    if not dtoolcore._is_dataset(value, config_path=CONFIG_PATH):
+        raise click.BadParameter(
+            "URI is not a dataset: {}".format(value))
+    return value
+
+
+dataset_uri_argument = click.argument(
+    "dataset_uri",
+    callback=dataset_uri_validation
+)
 
 
 def pretty_version_text():
