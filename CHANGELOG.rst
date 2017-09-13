@@ -10,8 +10,6 @@ This change log uses principles from `keep a changelog <http://keepachangelog.co
 Added
 ^^^^^
 
-- Add ``--debug`` option
-
 
 Changed
 ^^^^^^^
@@ -32,9 +30,20 @@ Fixed
 Security
 ^^^^^^^^
 
+[0.3.0] - 2017-09-13
+--------------------
 
-[0.2.0] 2017-08-30
-------------------
+Added
+^^^^^
+
+- ``dtool_cli.cli.dataset_uri_validation`` helper parameter validation method
+- ``dtool_cli.cli.dataset_uri_argument`` helper decorator
+- ``dtool_cli.cli.CONFIG_PATH`` global variable
+- Add ``--debug`` option
+
+
+[0.2.0] - 2017-08-30
+--------------------
 
 Basic scaffold to create a ``dtool`` client that uses the ``dtoolcore`` version
 2 API.
