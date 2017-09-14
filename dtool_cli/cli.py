@@ -15,6 +15,14 @@ from . import __version__
 CONFIG_PATH = os.path.expanduser("~/.config/dtool/dtool.json")
 
 
+def storagebroker_validation(ctx, param, value):
+    storage_broker_lookup = dtoolcore._generate_storage_broker_lookup()
+    if value not in storage_broker_lookup:
+        raise click.BadParameter(
+            "'{}' not in {}".format(value, storage_broker_lookup.keys()))
+    return value
+
+
 def dataset_uri_validation(ctx, param, value):
     if not dtoolcore._is_dataset(value, config_path=CONFIG_PATH):
         raise click.BadParameter(
