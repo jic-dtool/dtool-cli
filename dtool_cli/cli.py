@@ -76,4 +76,6 @@ def dtool(debug):
     level = logging.WARNING
     if debug:
         level = logging.DEBUG
-    logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s', level=level)
+    logging.basicConfig(
+        format='%(name)s - %(levelname)s - %(message)s',
+        level=level)
