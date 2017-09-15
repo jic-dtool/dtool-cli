@@ -30,6 +30,16 @@ Fixed
 Security
 ^^^^^^^^
 
+
+[0.4.0] - 2017-09-15
+--------------------
+
+Added
+^^^^^
+
+- ``dtool_cli.cli.storagebroker_validation`` helper parameter validation method
+
+
 [0.3.0] - 2017-09-13
 --------------------
 
