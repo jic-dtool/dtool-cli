@@ -14,6 +14,8 @@ Added
 Changed
 ^^^^^^^
 
+- Improved version string
+
 
 Deprecated
 ^^^^^^^^^^

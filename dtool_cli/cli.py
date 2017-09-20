@@ -10,6 +10,11 @@ from click_plugins import with_plugins
 
 import dtoolcore
 
+try:
+    from dtool import __version__ as dtool_version
+except ImportError:
+    dtool_version = ""
+
 from . import __version__
 
 CONFIG_PATH = os.path.expanduser("~/.config/dtool/dtool.json")
@@ -38,9 +43,10 @@ dataset_uri_argument = click.argument(
 
 def pretty_version_text():
     """Return pretty version text listing all plugins."""
-    version_lines = ["dtool, version {}".format(__version__)]
-    version_lines.append("\nCore:")
+    version_lines = ["dtool, version {}".format(dtool_version)]
+    version_lines.append("\nBase:")
     version_lines.append("dtoolcore, version {}".format(dtoolcore.__version__))
+    version_lines.append("dtool-cli, version {}".format(__version__))
 
     # List the storage broker packages.
     version_lines.append("\nStorage brokers:")
@@ -52,7 +58,7 @@ def pretty_version_text():
         version_lines.append(
             "{}, {}, version {}".format(
                 storage_broker.key,
-                package,
+                package.replace("_", "-"),
                 version))
 
     # List the plugin packages.
@@ -62,7 +68,9 @@ def pretty_version_text():
     for p in packages:
         dyn_load_p = __import__(p)
         version_lines.append(
-            "{}, version {}".format(p,  dyn_load_p.__version__))
+            "{}, version {}".format(
+                p.replace("_", "-"),
+                dyn_load_p.__version__))
 
     return "\n".join(version_lines)
 
