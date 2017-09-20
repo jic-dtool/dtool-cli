@@ -14,8 +14,6 @@ Added
 Changed
 ^^^^^^^
 
-- Improved version string
-
 
 Deprecated
 ^^^^^^^^^^
@@ -31,6 +29,15 @@ Fixed
 
 Security
 ^^^^^^^^
+
+
+[0.5.0] - 2017-09-20
+--------------------
+
+Changed
+^^^^^^^
+
+- Improved version string
 
 
 [0.4.0] - 2017-09-15
