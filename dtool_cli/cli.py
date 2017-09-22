@@ -35,9 +35,28 @@ def dataset_uri_validation(ctx, param, value):
     return value
 
 
+def proto_dataset_uri_validation(ctx, param, value):
+    dataset_uri_validation(ctx, param, value)
+    admin_metadata = dtoolcore._admin_metadata_from_uri(
+        uri=value,
+        config_path=CONFIG_PATH
+    )
+    if admin_metadata["type"] != "protodataset":
+        raise click.BadParameter(
+            "URI is not a proto dataset: {}".format(value))
+    return value
+
+
+
 dataset_uri_argument = click.argument(
     "dataset_uri",
     callback=dataset_uri_validation
+)
+
+
+proto_dataset_uri_argument = click.argument(
+    "proto_dataset_uri",
+    callback=proto_dataset_uri_validation
 )
 
 

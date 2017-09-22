@@ -10,6 +10,8 @@ This change log uses principles from `keep a changelog <http://keepachangelog.co
 Added
 ^^^^^
 
+- ``dtool_cli.cli.proto_dataset_uri_validation`` helper parameter validation method
+- ``dtool_cli.cli.proto_dataset_uri_argument`` helper decorator
 
 Changed
 ^^^^^^^
