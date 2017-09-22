@@ -28,7 +28,7 @@ def storagebroker_validation(ctx, param, value):
     return value
 
 
-def dataset_uri_validation(ctx, param, value):
+def base_dataset_uri_validation(ctx, param, value):
     if not dtoolcore._is_dataset(value, config_path=CONFIG_PATH):
         raise click.BadParameter(
             "URI is not a dataset: {}".format(value))
@@ -36,27 +36,50 @@ def dataset_uri_validation(ctx, param, value):
 
 
 def proto_dataset_uri_validation(ctx, param, value):
-    dataset_uri_validation(ctx, param, value)
+    base_dataset_uri_validation(ctx, param, value)
     admin_metadata = dtoolcore._admin_metadata_from_uri(
         uri=value,
         config_path=CONFIG_PATH
     )
     if admin_metadata["type"] != "protodataset":
-        raise click.BadParameter(
-            "URI is not a proto dataset: {}".format(value))
+        message_lines = [
+            "\nURI is not a proto dataset: {}".format(value),
+            "It looks like a frozen dataset",
+        ]
+        raise click.BadParameter("\n".join(message_lines))
     return value
 
 
+def dataset_uri_validation(ctx, param, value):
+    base_dataset_uri_validation(ctx, param, value)
+    admin_metadata = dtoolcore._admin_metadata_from_uri(
+        uri=value,
+        config_path=CONFIG_PATH
+    )
+    if admin_metadata["type"] != "dataset":
+        message_lines = [
+            "\nURI is not a frozen dataset: {}".format(value),
+            "It looks like a proto dataset",
+        ]
+        raise click.BadParameter("\n".join(message_lines))
+    return value
 
-dataset_uri_argument = click.argument(
+
+base_dataset_uri_argument = click.argument(
     "dataset_uri",
-    callback=dataset_uri_validation
+    callback=base_dataset_uri_validation
 )
 
 
 proto_dataset_uri_argument = click.argument(
     "proto_dataset_uri",
     callback=proto_dataset_uri_validation
+)
+
+
+dataset_uri_argument = click.argument(
+    "dataset_uri",
+    callback=dataset_uri_validation
 )
 
 

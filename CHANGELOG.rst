@@ -10,11 +10,16 @@ This change log uses principles from `keep a changelog <http://keepachangelog.co
 Added
 ^^^^^
 
+- ``dtool_cli.cli.base_dataset_uri_validation`` helper parameter validation method
+- ``dtool_cli.cli.base_dataset_uri_argument`` helper decorator
 - ``dtool_cli.cli.proto_dataset_uri_validation`` helper parameter validation method
 - ``dtool_cli.cli.proto_dataset_uri_argument`` helper decorator
 
 Changed
 ^^^^^^^
+
+- ``dtool_cli.cli.dataset_uri_validation`` now validates that dataset is frozen
+- ``dtool_cli.cli.dataset_uri_argument`` now validates that the dataset is frozen
 
 
 Deprecated
