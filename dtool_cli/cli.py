@@ -9,6 +9,7 @@ import click
 from click_plugins import with_plugins
 
 import dtoolcore
+import dtoolcore.utils
 
 try:
     from dtool import __version__ as dtool_version
@@ -29,6 +30,7 @@ def storagebroker_validation(ctx, param, value):
 
 
 def base_dataset_uri_validation(ctx, param, value):
+    value = dtoolcore.utils.sanitise_uri(value)
     if not dtoolcore._is_dataset(value, config_path=CONFIG_PATH):
         raise click.BadParameter(
             "URI is not a dataset: {}".format(value))
@@ -36,7 +38,7 @@ def base_dataset_uri_validation(ctx, param, value):
 
 
 def proto_dataset_uri_validation(ctx, param, value):
-    base_dataset_uri_validation(ctx, param, value)
+    value = base_dataset_uri_validation(ctx, param, value)
     admin_metadata = dtoolcore._admin_metadata_from_uri(
         uri=value,
         config_path=CONFIG_PATH
@@ -51,7 +53,7 @@ def proto_dataset_uri_validation(ctx, param, value):
 
 
 def dataset_uri_validation(ctx, param, value):
-    base_dataset_uri_validation(ctx, param, value)
+    value = base_dataset_uri_validation(ctx, param, value)
     admin_metadata = dtoolcore._admin_metadata_from_uri(
         uri=value,
         config_path=CONFIG_PATH

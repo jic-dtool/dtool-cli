@@ -26,6 +26,8 @@ Removed
 Fixed
 ^^^^^
 
+- Improved handling of URIs in validation code
+
 
 Security
 ^^^^^^^^
