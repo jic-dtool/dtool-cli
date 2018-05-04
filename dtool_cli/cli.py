@@ -18,6 +18,7 @@ except ImportError:
 
 from . import __version__
 
+_CLICK_CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 CONFIG_PATH = os.path.expanduser("~/.config/dtool/dtool.json")
 
 
@@ -120,7 +121,7 @@ def pretty_version_text():
 
 
 @with_plugins(iter_entry_points("dtool.cli"))
-@click.group()
+@click.group(context_settings=_CLICK_CONTEXT_SETTINGS)
 @click.version_option(message=pretty_version_text())
 @click.option("--debug", is_flag=True, help="Turn on debugging output.")
 def dtool(debug):
