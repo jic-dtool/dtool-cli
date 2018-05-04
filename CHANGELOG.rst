@@ -11,6 +11,7 @@ Added
 ^^^^^
 
 - Added support for ``-h`` flag as well as ``--help``
+- Added timestamp to logging output
 
 Changed
 ^^^^^^^

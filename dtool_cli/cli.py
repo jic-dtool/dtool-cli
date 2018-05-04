@@ -130,5 +130,5 @@ def dtool(debug):
     if debug:
         level = logging.DEBUG
     logging.basicConfig(
-        format='%(name)s - %(levelname)s - %(message)s',
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=level)
