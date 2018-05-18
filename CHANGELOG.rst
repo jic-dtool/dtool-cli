@@ -10,8 +10,6 @@ This change log uses principles from `keep a changelog <http://keepachangelog.co
 Added
 ^^^^^
 
-- Added support for ``-h`` flag as well as ``--help``
-- Added timestamp to logging output
 
 Changed
 ^^^^^^^
@@ -28,11 +26,24 @@ Removed
 Fixed
 ^^^^^
 
-- Improved handling of URIs in validation code
-
 
 Security
 ^^^^^^^^
+
+
+[0.7.0] - 2018-05-18
+--------------------
+
+Added
+^^^^^
+
+- Added support for ``-h`` flag as well as ``--help``
+- Added timestamp to logging output
+
+Fixed
+^^^^^
+
+- Improved handling of URIs in validation code
 
 
 [0.6.0] - 2017-09-25
