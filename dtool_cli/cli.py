@@ -3,7 +3,7 @@
 import os
 import logging
 
-from pkg_resources import iter_entry_points
+from importlib.metadata import entry_points
 
 import click
 from click_plugins import with_plugins
@@ -20,6 +20,36 @@ from . import __version__
 
 _CLICK_CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 CONFIG_PATH = os.path.expanduser("~/.config/dtool/dtool.json")
+
+
+def iter_entry_points(group):
+    """Iterate over entry points for a given group.
+
+    Compatibility wrapper for different Python versions.
+    """
+    eps = entry_points()
+    if hasattr(eps, 'select'):
+        # Python 3.10+ / importlib_metadata >= 3.6
+        return eps.select(group=group)
+    else:
+        # Python 3.9 and earlier - eps is a dict
+        return eps.get(group, [])
+
+
+def get_entry_point_module(ep):
+    """Get the module name from an entry point.
+
+    Handles both old and new style entry points.
+    """
+    if hasattr(ep, 'module'):
+        # importlib.metadata style
+        return ep.module
+    elif hasattr(ep, 'value'):
+        # importlib.metadata style - value is like "module:attr"
+        return ep.value.split(":")[0]
+    else:
+        # Fallback
+        return str(ep).split("=")[1].strip().split(":")[0]
 
 
 def storagebroker_validation(ctx, param, value):
@@ -96,7 +126,8 @@ def pretty_version_text():
     # List the storage broker packages.
     version_lines.append("\nStorage brokers:")
     for ep in iter_entry_points("dtool.storage_brokers"):
-        package = ep.module_name.split(".")[0]
+        module_name = get_entry_point_module(ep)
+        package = module_name.split(".")[0]
         dyn_load_p = __import__(package)
         version = dyn_load_p.__version__
         storage_broker = ep.load()
@@ -107,7 +138,7 @@ def pretty_version_text():
                 version))
 
     # List the plugin packages.
-    modules = [ep.module_name for ep in iter_entry_points("dtool.cli")]
+    modules = [get_entry_point_module(ep) for ep in iter_entry_points("dtool.cli")]
     packages = set([m.split(".")[0] for m in modules])
     version_lines.append("\nPlugins:")
     for p in packages:
