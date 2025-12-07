@@ -1,0 +1,43 @@
+[build-system]
+requires = ["flit_scm"]
+build-backend = "flit_scm:buildapi"
+
+[project]
+name = "dtool-cli"
+description = "Data management command line tool: dtool."
+readme = "README.rst"
+license = {text = "MIT"}
+authors = [
+    {name = "Tjelvar Olsson", email = "tjelvar.olsson@gmail.com"}
+]
+dynamic = ["version"]
+requires-python = ">=3.8"
+dependencies = [
+    "click",
+    "click-plugins",
+    "dtoolcore>=2",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+]
+
+[project.urls]
+Repository = "https://github.com/jic-dtool/dtool-cli"
+
+[project.scripts]
+dtool = "dtool_cli.cli:dtool"
+
+[tool.flit.module]
+name = "dtool_cli"
+
+[tool.setuptools_scm]
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
+write_to = "dtool_cli/version.py"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=dtool_cli --cov-report=term-missing"
