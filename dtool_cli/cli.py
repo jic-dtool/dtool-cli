@@ -3,7 +3,15 @@
 import os
 import logging
 
-from pkg_resources import iter_entry_points
+try:
+    from importlib.metadata import entry_points as _entry_points
+    def iter_entry_points(group, name=None):
+        eps = _entry_points(group=group)
+        if name is not None:
+            eps = [ep for ep in eps if ep.name == name]
+        return eps
+except ImportError:
+    from pkg_resources import iter_entry_points
 
 import click
 from click_plugins import with_plugins
