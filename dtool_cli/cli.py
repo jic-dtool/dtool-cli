@@ -3,7 +3,15 @@
 import os
 import logging
 
-from pkg_resources import iter_entry_points
+try:
+    from importlib.metadata import entry_points as _entry_points
+    def iter_entry_points(group, name=None):
+        eps = _entry_points(group=group)
+        if name is not None:
+            eps = [ep for ep in eps if ep.name == name]
+        return eps
+except ImportError:
+    from pkg_resources import iter_entry_points
 
 import click
 from click_plugins import with_plugins
@@ -96,7 +104,7 @@ def pretty_version_text():
     # List the storage broker packages.
     version_lines.append("\nStorage brokers:")
     for ep in iter_entry_points("dtool.storage_brokers"):
-        package = ep.module_name.split(".")[0]
+        package = ep.value.split(":")[0].split(".")[0]
         dyn_load_p = __import__(package)
         version = dyn_load_p.__version__
         storage_broker = ep.load()
@@ -107,7 +115,7 @@ def pretty_version_text():
                 version))
 
     # List the plugin packages.
-    modules = [ep.module_name for ep in iter_entry_points("dtool.cli")]
+    modules = [ep.value.split(":")[0] for ep in iter_entry_points("dtool.cli")]
     packages = set([m.split(".")[0] for m in modules])
     version_lines.append("\nPlugins:")
     for p in packages:
@@ -122,7 +130,7 @@ def pretty_version_text():
 
 @with_plugins(iter_entry_points("dtool.cli"))
 @click.group(context_settings=_CLICK_CONTEXT_SETTINGS)
-@click.version_option(message=pretty_version_text())
+@click.version_option(message=pretty_version_text() if not getattr(__import__('sys'), '_MEIPASS', None) else 'dtool')
 @click.option("--debug", is_flag=True, help="Turn on debugging output.")
 def dtool(debug):
     """Tool to work with datasets."""
