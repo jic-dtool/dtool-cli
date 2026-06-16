@@ -11,5 +11,5 @@ def test_version_is_string():
 def test_dtool():
     from dtool_cli.cli import dtool
     runner = CliRunner()
-    result = runner.invoke(dtool)
+    result = runner.invoke(dtool, ["--help"])
     assert result.exit_code == 0
