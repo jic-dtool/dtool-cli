@@ -29,7 +29,14 @@ jobs:
           python -m pip install .
 
       - name: Run tests
-        run: pytest
+        run: pytest --cov-report=xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          flags: py${{ matrix.python-version }}
+          fail_ci_if_error: false
 
   flake8:
     runs-on: ubuntu-latest
