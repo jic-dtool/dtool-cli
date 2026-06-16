@@ -14,6 +14,9 @@ Added
 Changed
 ^^^^^^^
 
+- Replaced ``pkg_resources`` entry-point discovery with
+  ``importlib.metadata``, removing the ``pkg_resources`` deprecation warning
+
 
 Deprecated
 ^^^^^^^^^^
@@ -21,6 +24,8 @@ Deprecated
 
 Removed
 ^^^^^^^
+
+- Dropped Python 2 support; now requires Python >= 3.9
 
 
 Fixed

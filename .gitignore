@@ -3,6 +3,9 @@
 *.egg-info
 
 .coverage
+coverage.xml
+htmlcov
+.pytest_cache
 .eggs
 .cache
 .tox
