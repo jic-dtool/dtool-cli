@@ -14,6 +14,8 @@ Added
 Changed
 ^^^^^^^
 
+- Build system switched to hatchling with hatch-vcs; the version is now
+  derived from git tags
 - Replaced ``pkg_resources`` entry-point discovery with
   ``importlib.metadata``, removing the ``pkg_resources`` deprecation warning
 

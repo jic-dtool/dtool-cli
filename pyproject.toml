@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling>=1.27", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dtool-cli"
+description = "Data management command line tool: dtool."
+readme = "README.rst"
+license = "MIT"
+license-files = ["LICENSE.rst"]
+authors = [
+    {name = "Tjelvar Olsson", email = "tjelvar.olsson@gmail.com"},
+]
+requires-python = ">=3.10"
+dynamic = ["version"]
+dependencies = [
+    "click",
+    "click-plugins",
+    "dtoolcore>=2",
+]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+[project.urls]
+Repository = "https://github.com/jic-dtool/dtool-cli"
+
+[project.scripts]
+dtool = "dtool_cli.cli:dtool"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+local_scheme = "no-local-version"
+
+[tool.hatch.build.targets.wheel]
+packages = ["dtool_cli"]

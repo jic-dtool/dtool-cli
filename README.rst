@@ -21,8 +21,8 @@ registering commands.
 
 
 To create a ``dtool-cli`` plug-in, create a Python package and register the
-function of interest in the ``setup.py`` file.  Below is the content of a
-hypothetical ``dtool_create/__init__.py`` file::
+click commands of interest as entry points in its ``pyproject.toml`` file.
+Below is the content of a hypothetical ``dtool_create/__init__.py`` file::
 
     import click
 
@@ -35,20 +35,15 @@ hypothetical ``dtool_create/__init__.py`` file::
         print("Freezing dataset...")
 
 
-To create an entry point for this function add the below in the ``setup.py``::
+To create entry points for these commands add the below to the
+``pyproject.toml``::
 
-    from setuptools import setup
+    [project.entry-points."dtool.cli"]
+    create = "dtool_create:create"
+    freeze = "dtool_create:freeze"
 
-    setup(
-        ...
-        entry_points={
-            "dtool.cli": [
-                "create=dtool_create:create",
-                "freeze=dtool_create:freeze",
-            ],
-        },
-        ...
-    )
+The entry points must refer to click commands (or groups). Plain functions,
+e.g. ``argparse`` based scripts, belong under ``[project.scripts]`` instead.
 
 
 
@@ -60,4 +55,4 @@ To install the dtool-cli package.
 .. code-block:: bash
 
     cd dtool-cli
-    python setup.py install
+    pip install .
