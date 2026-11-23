@@ -25,11 +25,19 @@ Deprecated
 Removed
 ^^^^^^^
 
-- Dropped Python 2 support; now requires Python >= 3.9
+- Dropped support for Python < 3.10 (including Python 2)
 
 
 Fixed
 ^^^^^
+
+- The ``--version`` text is only built when ``--version`` is given. Previously
+  it was built on import, so every ``dtool`` invocation imported all plugins,
+  and a single plugin without ``__version__`` (or one that failed to import)
+  broke the whole ``dtool`` command, including ``--help``; this also broke
+  frozen (e.g. PyInstaller) builds
+- A plugin or storage broker without ``__version__`` is listed with version
+  "unknown" instead of crashing ``dtool --version``
 
 
 Security
