@@ -99,6 +99,26 @@ dataset_uri_argument = click.argument(
 )
 
 
+def _package_version(package):
+    """Return the ``__version__`` of ``package``, or "unknown".
+
+    A plugin that cannot be imported or that lacks ``__version__`` must not
+    break the version listing.
+    """
+    try:
+        return __import__(package).__version__
+    except Exception:
+        return "unknown"
+
+
+def _storage_broker_key(ep):
+    """Return the key of the storage broker behind entry point ``ep``."""
+    try:
+        return ep.load().key
+    except Exception:
+        return ep.name
+
+
 def pretty_version_text():
     """Return pretty version text listing all plugins."""
     version_lines = ["dtool, version {}".format(dtool_version)]
@@ -110,32 +130,42 @@ def pretty_version_text():
     version_lines.append("\nStorage brokers:")
     for ep in iter_entry_points("dtool.storage_brokers"):
         package = ep.module.split(".")[0]
-        dyn_load_p = __import__(package)
-        version = dyn_load_p.__version__
-        storage_broker = ep.load()
         version_lines.append(
             "{}, {}, version {}".format(
-                storage_broker.key,
+                _storage_broker_key(ep),
                 package.replace("_", "-"),
-                version))
+                _package_version(package)))
 
     # List the plugin packages.
     modules = [ep.module for ep in iter_entry_points("dtool.cli")]
     packages = set([m.split(".")[0] for m in modules])
     version_lines.append("\nPlugins:")
     for p in packages:
-        dyn_load_p = __import__(p)
         version_lines.append(
             "{}, version {}".format(
                 p.replace("_", "-"),
-                dyn_load_p.__version__))
+                _package_version(p)))
 
     return "\n".join(version_lines)
 
 
+def _print_version(ctx, param, value):
+    """Print the version of dtool and its plugins, then exit.
+
+    The text is only built when ``--version`` is given: building it imports
+    every plugin, which should neither slow down nor be able to break other
+    invocations of ``dtool``.
+    """
+    if not value or ctx.resilient_parsing:
+        return
+    click.echo(pretty_version_text())
+    ctx.exit()
+
+
 @with_plugins(iter_entry_points("dtool.cli"))
 @click.group(context_settings=_CLICK_CONTEXT_SETTINGS)
-@click.version_option(message=pretty_version_text())
+@click.option("--version", is_flag=True, expose_value=False, is_eager=True,
+              callback=_print_version, help="Show the version and exit.")
 @click.option("--debug", is_flag=True, help="Turn on debugging output.")
 def dtool(debug):
     """Tool to work with datasets."""

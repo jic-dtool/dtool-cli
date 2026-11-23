@@ -57,3 +57,46 @@ def test_iter_entry_points_returns_iterable():
     # an unknown group should yield an empty (but iterable) result.
     from dtool_cli.cli import iter_entry_points
     assert list(iter_entry_points("dtool.no_such_group")) == []
+
+
+def test_version_text_not_built_unless_requested(mocker):
+    # Building the version text imports every plugin; it must not happen on
+    # import or for other invocations such as --help.
+    from dtool_cli.cli import dtool
+    pretty = mocker.patch("dtool_cli.cli.pretty_version_text",
+                          return_value="VERSION TEXT")
+    runner = CliRunner()
+
+    result = runner.invoke(dtool, ["--help"])
+    assert result.exit_code == 0
+    pretty.assert_not_called()
+
+    result = runner.invoke(dtool, ["--version"])
+    assert result.exit_code == 0
+    assert result.output == "VERSION TEXT\n"
+    pretty.assert_called_once_with()
+
+
+def test_pretty_version_text_tolerates_broken_plugins(mocker):
+    from types import SimpleNamespace
+    from dtool_cli.cli import pretty_version_text
+
+    def broken_load():
+        raise ImportError("broken storage broker")
+
+    entry_points = {
+        # "os" exists but has no __version__; "no_such_pkg" cannot be imported.
+        "dtool.storage_brokers": [
+            SimpleNamespace(name="BrokenBroker", module="no_such_pkg.broker",
+                            load=broken_load),
+        ],
+        "dtool.cli": [
+            SimpleNamespace(name="noversion", module="os"),
+        ],
+    }
+    mocker.patch("dtool_cli.cli.iter_entry_points",
+                 side_effect=lambda group: entry_points.get(group, []))
+
+    text = pretty_version_text()
+    assert "BrokenBroker, no-such-pkg, version unknown" in text
+    assert "os, version unknown" in text
