@@ -25,7 +25,7 @@ Deprecated
 Removed
 ^^^^^^^
 
-- Dropped Python 2 support; now requires Python >= 3.9
+- Dropped support for Python < 3.10 (including Python 2)
 
 
 Fixed

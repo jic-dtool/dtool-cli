@@ -14,7 +14,7 @@ setup(
     author="Tjelvar Olsson",
     author_email="tjelvar.olsson@gmail.com",
     url=url,
-    python_requires=">=3.9",
+    python_requires=">=3.10",
     install_requires=[
         "click",
         "click-plugins",
@@ -25,7 +25,6 @@ setup(
     },
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",

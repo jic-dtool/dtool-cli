@@ -1,7 +1,6 @@
 """Skeleton defining the dtool plugin entry points."""
 
 import os
-import sys
 import logging
 
 from importlib.metadata import entry_points
@@ -24,15 +23,8 @@ CONFIG_PATH = os.path.expanduser("~/.config/dtool/dtool.json")
 
 
 def iter_entry_points(group):
-    """Yield the entry points registered under ``group``.
-
-    Wrapper over :func:`importlib.metadata.entry_points` that works on the
-    supported Python versions: the ``group`` selection keyword was only added
-    in Python 3.10.
-    """
-    if sys.version_info >= (3, 10):
-        return entry_points(group=group)
-    return entry_points().get(group, [])
+    """Yield the entry points registered under ``group``."""
+    return entry_points(group=group)
 
 
 def storagebroker_validation(ctx, param, value):
