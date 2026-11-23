@@ -10,6 +10,33 @@ This change log uses principles from `keep a changelog <http://keepachangelog.co
 Added
 ^^^^^
 
+
+Changed
+^^^^^^^
+
+
+Deprecated
+^^^^^^^^^^
+
+
+Removed
+^^^^^^^
+
+
+Fixed
+^^^^^
+
+
+Security
+^^^^^^^^
+
+
+[0.7.2] - 2026-11-23
+--------------------
+
+Added
+^^^^^
+
 - GitHub Actions workflow that publishes a release to PyPI when a version
   tag is pushed
 
@@ -21,16 +48,10 @@ Changed
 - Replaced ``pkg_resources`` entry-point discovery with
   ``importlib.metadata``, removing the ``pkg_resources`` deprecation warning
 
-
-Deprecated
-^^^^^^^^^^
-
-
 Removed
 ^^^^^^^
 
 - Dropped support for Python < 3.10 (including Python 2)
-
 
 Fixed
 ^^^^^
@@ -42,10 +63,6 @@ Fixed
   frozen (e.g. PyInstaller) builds
 - A plugin or storage broker without ``__version__`` is listed with version
   "unknown" instead of crashing ``dtool --version``
-
-
-Security
-^^^^^^^^
 
 
 [0.7.1] - 2021-06-23
