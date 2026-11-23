@@ -1,17 +1,10 @@
 """Skeleton defining the dtool plugin entry points."""
 
 import os
+import sys
 import logging
 
-try:
-    from importlib.metadata import entry_points as _entry_points
-    def iter_entry_points(group, name=None):
-        eps = _entry_points(group=group)
-        if name is not None:
-            eps = [ep for ep in eps if ep.name == name]
-        return eps
-except ImportError:
-    from pkg_resources import iter_entry_points
+from importlib.metadata import entry_points
 
 import click
 from click_plugins import with_plugins
@@ -28,6 +21,18 @@ from . import __version__
 
 _CLICK_CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 CONFIG_PATH = os.path.expanduser("~/.config/dtool/dtool.json")
+
+
+def iter_entry_points(group):
+    """Yield the entry points registered under ``group``.
+
+    Wrapper over :func:`importlib.metadata.entry_points` that works on the
+    supported Python versions: the ``group`` selection keyword was only added
+    in Python 3.10.
+    """
+    if sys.version_info >= (3, 10):
+        return entry_points(group=group)
+    return entry_points().get(group, [])
 
 
 def storagebroker_validation(ctx, param, value):
@@ -104,7 +109,7 @@ def pretty_version_text():
     # List the storage broker packages.
     version_lines.append("\nStorage brokers:")
     for ep in iter_entry_points("dtool.storage_brokers"):
-        package = ep.value.split(":")[0].split(".")[0]
+        package = ep.module.split(".")[0]
         dyn_load_p = __import__(package)
         version = dyn_load_p.__version__
         storage_broker = ep.load()
@@ -115,7 +120,7 @@ def pretty_version_text():
                 version))
 
     # List the plugin packages.
-    modules = [ep.value.split(":")[0] for ep in iter_entry_points("dtool.cli")]
+    modules = [ep.module for ep in iter_entry_points("dtool.cli")]
     packages = set([m.split(".")[0] for m in modules])
     version_lines.append("\nPlugins:")
     for p in packages:
