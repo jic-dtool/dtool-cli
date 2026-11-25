@@ -14,6 +14,10 @@ Added
 Changed
 ^^^^^^^
 
+- Errors of commands, e.g. of storage brokers, are reported as one line
+  ("Error: ...") with exit code 1 instead of a traceback; ``dtool --debug``
+  shows the traceback
+
 
 Deprecated
 ^^^^^^^^^^

@@ -154,8 +154,31 @@ def _print_version(ctx, param, value):
     ctx.exit()
 
 
+class _DtoolGroup(click.Group):
+    """Report errors of commands as one line instead of a traceback.
+
+    Errors of storage brokers and dtoolcore (e.g. "Not logged in", a
+    missing bucket) are not bugs of the command line; ``dtool --debug``
+    shows the traceback.
+    """
+
+    def invoke(self, ctx):
+        try:
+            return super().invoke(ctx)
+        except (click.exceptions.ClickException, click.exceptions.Exit,
+                click.exceptions.Abort):
+            raise
+        except Exception as e:
+            if ctx.params.get("debug"):
+                raise
+            message = str(e) or type(e).__name__
+            raise click.ClickException(
+                f"{message}\n(Run 'dtool --debug ...' for details.)"
+            ) from e
+
+
 @with_plugins(iter_entry_points("dtool.cli"))
-@click.group(context_settings=_CLICK_CONTEXT_SETTINGS)
+@click.group(cls=_DtoolGroup, context_settings=_CLICK_CONTEXT_SETTINGS)
 @click.option("--version", is_flag=True, expose_value=False, is_eager=True,
               callback=_print_version, help="Show the version and exit.")
 @click.option("--debug", is_flag=True, help="Turn on debugging output.")
