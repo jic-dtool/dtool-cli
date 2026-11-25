@@ -152,3 +152,10 @@ Removed
 ^^^^^^^
 
 - Entry points ``dtool.dataset`` and ``dtool.collection``
+
+
+[0.1.0] - 2017-08-03
+--------------------
+
+Initial release of the ``dtool`` command, with the ``dtool.dataset`` and
+``dtool.collection`` plugin entry points.
