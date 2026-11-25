@@ -100,3 +100,64 @@ def test_pretty_version_text_tolerates_broken_plugins(mocker):
     text = pretty_version_text()
     assert "BrokenBroker, no-such-pkg, version unknown" in text
     assert "os, version unknown" in text
+
+
+def _with_failing_command(args, error):
+    import click
+    from dtool_cli.cli import dtool
+
+    @dtool.command(name="_fail")
+    @click.argument("uri", required=False)
+    def _fail(uri):
+        raise error
+
+    try:
+        return CliRunner().invoke(dtool, args)
+    finally:
+        dtool.commands.pop("_fail", None)
+
+
+def test_errors_reported_without_traceback():
+    """Errors of storage brokers are reported in one line, exit code 1."""
+    result = _with_failing_command(
+        ["_fail"], RuntimeError("Not logged in to dserver example.org"))
+    assert result.exit_code == 1
+    assert "Error: Not logged in to dserver example.org" in result.output
+    assert "dtool --debug" in result.output
+    assert "Traceback" not in result.output
+
+
+def test_errors_with_traceback_in_debug_mode():
+    error = RuntimeError("broken")
+    result = _with_failing_command(["--debug", "_fail"], error)
+    assert result.exit_code == 1
+    assert result.exception is error
+
+
+def test_errors_of_parameter_callbacks_reported(tmp_path):
+    """Validating a dataset URI contacts storage, which can fail."""
+    import click
+    from dtool_cli.cli import dtool
+
+    def callback(ctx, param, value):
+        raise ValueError(f"Invalid URI: {value}")
+
+    @dtool.command(name="_fail")
+    @click.argument("uri", callback=callback)
+    def _fail(uri):
+        pass
+
+    try:
+        result = CliRunner().invoke(dtool, ["_fail", "nope://x"])
+    finally:
+        dtool.commands.pop("_fail", None)
+    assert result.exit_code == 1
+    assert "Error: Invalid URI: nope://x" in result.output
+
+
+def test_click_errors_unchanged():
+    import click
+    result = _with_failing_command(["_fail"], click.UsageError("bad usage"))
+    assert result.exit_code == 2
+    assert "bad usage" in result.output
+    assert "dtool --debug" not in result.output
